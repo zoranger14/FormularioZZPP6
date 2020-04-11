@@ -4,6 +4,61 @@ extract($_REQUEST);
 
 class PersonasControlador
 {
+
+
+public function modificar(){
+	extract($_REQUEST);
+	$db=new clasedb();
+	$conex=$db->conectar();
+
+	$sql="SELECT * FROM datos_personales WHERE id=".$id_persona."";
+	$res=mysqli_query($conex,$sql);
+	$data=mysqli_fetch_array($res);
+
+	header("Location: editar.php?data=".serialize($data));
+}
+
+ public function actualizar(){
+	extract($_REQUEST);
+	$db=new clasedb();
+	$conex=$db->conectar();
+
+	$sql="SELECT * FROM datos_personales WHERE cedula=".$cedula." AND id<>".$id_persona;
+
+$res=mysqli_query($conex,$sql);
+$cant=mysqli_num_rows($res);
+		if($cant>0)
+		{
+			?>
+					<script type="text/javascript">
+						alert("CEDULA REGISTRADA");
+						window.location="PersonasControlador.php?operacion=index";
+					</script>
+				<?php
+		}else{
+		$sql="UPDATE datos_personales SET nombres='".$nombres."',apellidos='".$apellidos."', cedula=".$cedula." WHERE id=".$id_persona;
+		$res=mysqli_query($conex,$sql);
+			if ($res){
+				?>
+				<script type="text/javascript">
+						alert("ERROR AL MODIFICAR");
+						window.location="PersonasControlador.php?operacion=index";
+						</script>
+					<?php
+			}else{
+				?>
+					<script type="text/javascript">
+						alert("ERROR AL MODIFICAR REGISTRO");
+						window.location="PersonasControlador.php?operacion=index";
+					</script>
+				<?php
+				}
+			}
+	
+}
+
+
+
 	public function index(){
 		$db=new clasedb();
 		$conex=$db->conectar();
@@ -30,23 +85,23 @@ class PersonasControlador
 	static function controlador($operacion){
 		$persona=new PersonasControlador();
 	switch($operacion){
-		case'index':
+		case 'index':
 			$persona->index();
 			break;
-		case'registra':
+		case 'registra':
 			$persona->registrar();
 			break;
-		case'guardar':
+		case 'guardar':
 			$persona->guardar();
 			break;
-		case'modificar':
+		case 'modificar':
 			$persona->modificar();
 			break;
-		case'actualizar':
+		case 'actualizar':
 			$persona->actualizar();
 			break;
-		case'eliminar':
-			$persona->eliminar();
+		case 'eliminar':
+			//$persona->eliminar();
 			break;
 		default:
 			?>
