@@ -81,6 +81,32 @@ $cant=mysqli_num_rows($res);
 			header("Location: index.php?filas=".$filas."&campos=".$campos."&data=".serialize($datos));
 	}
 
+public function eliminar()
+{
+	extract($_REQUEST);
+	$db=new clasedb();
+	$conex=$db->conectar();
+
+	$sql="DELETE FROM datos_personales WHERE id=".$id_persona;
+
+		$res=mysqli_query($conex,$sql);
+		if ($res) {
+			?>
+				<script type="text/javascript">
+					alert("REGISTRO ELIMINADO");
+					window.location="PersonasControlador.php?operacion=index";
+				</script>
+			<?php 
+		} else{
+			?>
+				<script type="text/javascript">
+					alert("REGISTRO NO ELIMINADO");
+					window.location="PersonasControlador.php?operacion=index";
+				</script>
+			<?php
+		}
+}//fin funcion eliminar
+
 
 	static function controlador($operacion){
 		$persona=new PersonasControlador();
@@ -101,7 +127,7 @@ $cant=mysqli_num_rows($res);
 			$persona->actualizar();
 			break;
 		case 'eliminar':
-			//$persona->eliminar();
+			$persona->eliminar();
 			break;
 		default:
 			?>
