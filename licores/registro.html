@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Registro</title>
+	<link rel="stylesheet" type="text/css" href="menu.css">
+</head>
+<body>
+	<div class="reg">
+	<form action="PersonasControlador.php" method="post" name="registro">
+		<table align="center">
+			<tr>
+				<td colspan="2"><b>Registro de licores</b></td>
+			</tr>
+			<tr>
+				<td>Nombre del licor:</td><td><input type="text" name="nombre" id="nombre" placeholder="Ej: Linaje" title="Ingrese nombre del producto"></td>
+			</tr>
+			<tr>
+				<td>Tipo de Licor:</td><td><input type="text" name="tipo" id="tipo" placeholder="Ej: Ron extra anejo" title="Ingrese el tipo de licor"></td>
+			</tr>
+			<tr>
+				<td>Grado alcoholico:</td><td><input type="number" min="0" name="grado_alcohol" id="grado_alcohol" placeholder="Ej: 40" title="Ingrese el grado alcoholico"></td>
+			</tr>
+			<tr>
+				<td>Marca del producto:</td><td><input type="text" name="marca" id="marca" placeholder="Ej: Santa Teresa" title="Ingrese la marca"></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					<input type="hidden" name="operacion" value="registro">
+					<input type="submit" name="enviar" value="registro"></td>
+			</tr>
+		</table>
+	</form>
+</div>
+</body>
+</html>

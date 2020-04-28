@@ -3,7 +3,7 @@
 
 	extract($_REQUEST);
 
-	//echo $nombres."-".apellidos."-".$cedula;//
+	//echo $nombres."-".apellidos."-".$cedula;
 	$db=new clasedb();
 	$con=$db->conectar();
 	$sql="INSERT INTO datos_personales VALUES(NULL,'".$nombres."','".$apellidos."','".$cedula."')";
