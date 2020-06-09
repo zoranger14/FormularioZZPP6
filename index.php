@@ -10,6 +10,7 @@
 		<li><a href="formulario.html">Formulario</a></li>
 		<li><a href="./personas/PersonasControlador.php?operacion=index">Personas</a></li>
 		<li><a href="./licores/index.php">Licores</a></li>
+		<li><a href="./personas/mostrar.php">Herencia</a></li>
 	</ul>
 
 </body>
