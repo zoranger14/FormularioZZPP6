@@ -1,0 +1,26 @@
+public function index(){ //Comienzo de la función.
+
+	$db=new clasedb(); // Instancia el archivo en la función.
+	$conex=$db->conectar(); //Conecta la función a la cual se está llamando a la función.
+
+	$sql="SELECT * FROM datos_personales"; //Llamado a los datos alojados en la variable.
+
+	$res=msqli_query($conex,$sql); //Añadiendo conexión mysql.
+
+	$campos=mysqli_num_fields($res); //Obtenemos el número de filas del campo.
+
+	$filas=mysqli_num_rows($res); //Retornamos el número de filas del resultado.
+	$i=0; //Contador para los campos.
+	$datos[]=array(); //Se guardan los diferentes datos en la variable.
+
+	while($data=mysqli_fetch_array($res)){ //Describe que se devolverá un array con indices numéricos.
+		for ($j=0; $j <$campos; $j++){ //Inicio de ciclo para ejecutar la líneas de código iterativa.
+			$datos[$i][$j]=$data[$j]; //El control cíclico ´de los datos serán con la información almacenada en los resultados de los campos y las filas.
+		}
+		$i++ //El operador irá en incremento.
+	}
+	mysqli_close($conex); //Cierre de la conexión msqli.
+
+		header("Location: index.php?filas".$filas."&campos=".$campos."&data=".serialize($datos)); // Enlace de cabecera que mostrará la visualización de la función.
+
+}//fin de la funcion index
