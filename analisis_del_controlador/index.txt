@@ -1,26 +1,133 @@
-public function index(){ //Comienzo de la función.
+public function index(){		//1) Comienzo de la función definida como pública 
+								//para ser accesible a todo el codigo.
 
-	$db=new clasedb(); // Instancia el archivo en la función.
-	$conex=$db->conectar(); //Conecta la función a la cual se está llamando a la función.
+	$db=new clasedb(); 			//4) Instancia el archivo en la función.
+	$conex=$db->conectar(); 	//5) Conecta la función a la cual se está llamando a la función.
 
-	$sql="SELECT * FROM datos_personales"; //Llamado a los datos alojados en la variable.
+								//8) Llamado a los datos alojados en la variable.
+	$sql="SELECT * FROM datos_personales"; 
 
-	$res=msqli_query($conex,$sql); //Añadiendo conexión mysql.
+								//11) Añadiendo conexión mysql.
+	$res=msqli_query($conex,$sql); 
 
-	$campos=mysqli_num_fields($res); //Obtenemos el número de filas del campo.
+								//14) Obtenemos el número de filas del campo.
+	$campos=mysqli_num_fields($res); 
 
-	$filas=mysqli_num_rows($res); //Retornamos el número de filas del resultado.
-	$i=0; //Contador para los campos.
-	$datos[]=array(); //Se guardan los diferentes datos en la variable.
+	$filas=mysqli_num_rows($res); //16) Retornamos el número de filas del resultado.
+	$i=0; 						//17) Contador para los campos.
+	$datos[]=array();			//18) Se guardan los diferentes datos en la variable.
 
-	while($data=mysqli_fetch_array($res)){ //Describe que se devolverá un array con indices numéricos.
-		for ($j=0; $j <$campos; $j++){ //Inicio de ciclo para ejecutar la líneas de código iterativa.
-			$datos[$i][$j]=$data[$j]; //El control cíclico ´de los datos serán con la información almacenada en los resultados de los campos y las filas.
+								//20) Describe que se devolverá un array con indices numéricos.
+	while($data=mysqli_fetch_array($res)){ 
+
+								//24) Inicio de ciclo para ejecutar la líneas de código iterativa.
+		for ($j=0; $j <$campos; $j++){ 
+
+								//27) El control cíclico ´de los datos serán con la información 
+								//almacenada en los resultados de los campos y las filas.
+			$datos[$i][$j]=$data[$j]; 
 		}
-		$i++ //El operador irá en incremento.
+		$i++					//30) El contador irá en incremento.
 	}
-	mysqli_close($conex); //Cierre de la conexión msqli.
+	mysqli_close($conex);		//32) Cierre de la conexión msqli.
+ 								//35) Enlace de cabecera que mostrará la visualización de la función
+ 								que deberá rellenar para poder enviarlos entre las url.
+		header("Location: index.php?filas".$filas."&campos=".$campos."&data=".serialize($datos)); 
 
-		header("Location: index.php?filas".$filas."&campos=".$campos."&data=".serialize($datos)); // Enlace de cabecera que mostrará la visualización de la función.
+}//37) fin de la funcion index
 
-}//fin de la funcion index
+//---------------------------------------------------------------------------------
+
+
+public function modificar(){ 	//42)Apertura de la función definida como pública para
+								//que sea accesible en cualquier llamado del código.
+
+	extract($_REQUEST);			//45)Estamos extrayendo los datos provenientes de la 
+								//request solicitada al archivo.
+
+	$db=new clasedb();			//48)Instaciamos la clasedb para hacer la conexión de
+								//en la base de datos.
+	$conex=$db->conectar();		//50)Se realiza la conexión en la base de datos.
+ 		 	
+ 		 			//54)Creamos la estructura de una cosulta SQL donde se enviará
+ 		 			//los datos a la base de datos (datos de la tabla "Datos_personales"). 
+	$sql="SELECT * FROM datos_personales WHERE id=".$id_persona.""; 
+
+	$res=mysqli_query($conex,$sql);	//56)Se utiliza para guardar una variable de la función "mysqli-query"
+	$data=mysqli_fetch_array($res); //57)Varible que devolverá un array con indices numéricos.
+
+	/* 60)Función "Header" que mostrará al usuario en otra dirección la visualización de la función que deberá realizar para poder enviarlos entre las url. */
+	header("Location: editar.php?data=".serialize($data));"
+
+}
+
+//---------------------------------------------------------------------------
+
+
+ public function actualizar(){	//67) Apertura de la función definida como pública para
+								//que sea accesible en cualquier llamado del código.
+
+	extract($_REQUEST);			//70) Extrae los datos provenientes de la request solicitada al archivo.
+	$db=new clasedb();			//71) Instaciamos la clasedb para hacer la conexión de
+								//en la base de datos.
+	$conex=$db->conectar();		//73) Se realiza una conexión en la base de datos.
+
+				//78)Creamos la estructura de una cosulta SQL donde se enviará
+ 		 		//los datos a la base de datos (datos de la tabla "Datos_personales").
+ 		 		//Los cuales serán especificamente "Cédula y el ID"
+	$sql="SELECT * FROM datos_personales WHERE cedula=".$cedula." AND id<>".$id_persona;
+
+$res=mysqli_query($conex,$sql);		//80)Se utiliza para guardar una variable de la función "mysqli-query"
+$cant=mysqli_num_rows($res);		//81)Varible que devolverá un array con indices numéricos de la
+									//82)variable "$cant".
+		if($cant>0)			//83)Condicional que verificará si la variable "$cant" contiene algún 
+							//número mayor de 0, de ser así, la cédula fue hallada.
+		{
+			?>			//86)Cierre del PHP para escribir texto plano.
+
+					//88)Etiqueta que nos permitirá escribir JavaScript.
+					<script type="text/javascript">
+						alert("CEDULA REGISTRADA");	//90)Alerta para indicar al usuario el registro.
+
+				//93)varible globas "window" con atributo "location" para redireccionar al usuario.
+						window.location="PersonasControlador.php?operacion=index";
+
+					</script> //95)Cierre de la etiqueta
+				<?php //96)Se abre llaves de PHP para poder escribir código PHP.
+
+		}else{ //98)Cerramos IF y añadimos un ELSE para continuar con un caso contrario.
+
+		//102)Se lleva los datos a la base de datos a sus respectivos campos y 
+		//se comienza el caso contrario de hallar la cedula registrada.
+		$sql="UPDATE datos_personales SET nombres='".$nombres."',apellidos='".$apellidos."', cedula=".$cedula." WHERE id=".$id_persona; 
+
+		//105)Realizamos un query hacia el servidor con la consulta definida
+		$res=mysqli_query($conex,$sql);
+
+			if ($res){ //107)Creamos un IF para para poder verificar  el resultado de la respuesta.
+				?> //108)Se cierra el PHP para escribir en texto plano.
+
+				<script type="text/javascript"> //110)Etiqueta script de tipo "text/javascrip"
+												//para ejecutar códigos de JavaScript.
+						alert("ERROR AL MODIFICAR"); //112)Creamos una alerta para indicar si existe error.
+
+	//115)Usamos la variable global "window" con atributo "location" para redireccionar al registro del sistema.
+						window.location="PersonasControlador.php?operacion=index";
+
+						</script> //117)cierre de la etiqueta.
+					<?php 	//118)Se abre llaves de PHP para poder escribir código PHP.
+			}else{	//119)Cerramos IF y añadimos un ELSE para continuar con un caso contrario.
+				?>
+					<script type="text/javascript"> //121)Etiqueta script de tipo "text/javascrip"
+													//para ejecutar códigos de JavaScript.
+						//124)Creamos una alerta para indicar si existe error.	
+						alert("ERROR AL MODIFICAR REGISTRO");
+
+//127)Usamos la variable global "window" con atributo "location" para redireccionar al registro del sistema.
+						window.location="PersonasControlador.php?operacion=index";
+					</script> //128)cierre de la etiqueta.
+				<?php 	//129)Se abre llaves de PHP para poder escribir código PHP.
+				}
+			}
+	
+}
